@@ -1,0 +1,32 @@
+﻿{
+    "name":  "dbproject---3",
+    "version":  "1.0.0",
+    "main":  "src/server.js",
+    "scripts":  {
+                    "start":  "node src/server.js",
+                    "dev":  "node --watch src/server.js",
+                    "migrate":  "node src/db/migrate.js",
+                    "test":  "jest --runInBand --forceExit"
+                },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "description":  "Task tracking and collaboration REST API (Express + PostgreSQL)",
+    "dependencies":  {
+                         "bcryptjs":  "^3.0.3",
+                         "cors":  "^2.8.6",
+                         "dotenv":  "^18.0.8",
+                         "express":  "^5.3.0",
+                         "helmet":  "^8.3.0",
+                         "jsonwebtoken":  "^9.0.3",
+                         "multer":  "^2.4.0",
+                         "pg":  "^8.23.1",
+                         "zod":  "^4.6.7"
+                     },
+    "devDependencies":  {
+                            "jest":  "^30.5.2",
+                            "supertest":  "^7.3.1"
+                        }
+}
