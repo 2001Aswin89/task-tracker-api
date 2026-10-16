@@ -23,9 +23,8 @@ const gemini = {
   async generateTask(prompt) {
     if (!config.llm.geminiKey) throw new HttpError(503, 'ai_unavailable', 'GEMINI_API_KEY is not configured');
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${config.llm.geminiModel}:generateContent`;
-    let res;
-    try {
-      res = await fetch(url, {
+    const request = () =>
+      fetch(url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': config.llm.geminiKey },
         body: JSON.stringify({
@@ -35,6 +34,14 @@ const gemini = {
         }),
         signal: AbortSignal.timeout(20000),
       });
+    let res;
+    try {
+      res = await request();
+      // Free-tier models are occasionally overloaded; retry once before giving up.
+      if (res.status === 503 || res.status === 429) {
+        await new Promise((r) => setTimeout(r, 1500));
+        res = await request();
+      }
     } catch {
       throw new HttpError(502, 'ai_error', 'AI provider could not be reached');
     }

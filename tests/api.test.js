@@ -168,9 +168,18 @@ describe('teams and collaboration', () => {
       .attach('file', Buffer.from('hello world'), { filename: 'notes.txt', contentType: 'text/plain' });
     expect(up.status).toBe(201);
     expect(up.body.attachment.original_name).toBe('notes.txt');
-    const dl = await request(app).get(`/api/attachments/${up.body.attachment.id}/download`).set(auth(ann));
+    const dl = await request(app)
+      .get(`/api/attachments/${up.body.attachment.id}/download`)
+      .set(auth(ann))
+      .buffer(true)
+      .parse((res, cb) => {
+        const chunks = [];
+        res.on('data', (c) => chunks.push(c));
+        res.on('end', () => cb(null, Buffer.concat(chunks)));
+      });
     expect(dl.status).toBe(200);
-    expect(dl.text).toBe('hello world');
+    expect(dl.headers['content-disposition']).toContain('notes.txt');
+    expect(dl.body.toString()).toBe('hello world');
     expect((await request(app).get(`/api/attachments/${up.body.attachment.id}/download`).set(auth(cat))).status).toBe(404);
 
     const exe = await request(app)

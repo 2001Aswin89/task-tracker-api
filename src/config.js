@@ -22,6 +22,6 @@ module.exports = {
   llm: {
     provider: isTest ? 'mock' : process.env.LLM_PROVIDER || 'mock',
     geminiKey: process.env.GEMINI_API_KEY,
-    geminiModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+    geminiModel: process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
   },
 };
